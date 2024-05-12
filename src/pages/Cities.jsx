@@ -42,6 +42,7 @@ const Cities = () => {
           <Box key={city.id} p={5} shadow="md" borderWidth="1px">
             <Image src={`https://source.unsplash.com/random/?${city.name}`} alt="City Image" mb={4} width="300px" height="200px" objectFit="cover" />
             <Text fontSize="xl">{city.name}</Text>
+            <Text fontSize="md">Population: {city.population}</Text>
           </Box>
         ))}
       </SimpleGrid>
