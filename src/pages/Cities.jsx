@@ -60,8 +60,11 @@ const Cities = () => {
       </SimpleGrid>
       <Modal isOpen={isModalOpen} onClose={closeModal}>
         <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>{selectedCity ? selectedCity.name : ''}</ModalHeader>
+        <ModalContent size="full">
+          <ModalHeader>
+            <Image src={`https://source.unsplash.com/random/?${selectedCity ? selectedCity.name : ''}`} alt="City Image" width="100%" height="30%"/>
+            {selectedCity ? selectedCity.name : ''}
+          </ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <Text fontSize="md">Population: {selectedCity ? selectedCity.population : ''}</Text>
