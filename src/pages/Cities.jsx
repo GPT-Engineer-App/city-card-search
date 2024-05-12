@@ -40,7 +40,7 @@ const Cities = () => {
       <SimpleGrid columns={3} spacing={4}>
         {filteredCities.map(city => (
           <Box key={city.id} p={5} shadow="md" borderWidth="1px">
-            <Image src="https://via.placeholder.com/150" alt="City Image" mb={4} />
+            <Image src={`https://source.unsplash.com/random/?${city.name}`} alt="City Image" mb={4} width="100%" />
             <Text fontSize="xl">{city.name}</Text>
           </Box>
         ))}
