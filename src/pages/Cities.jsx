@@ -1,20 +1,36 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Input, SimpleGrid, Text, VStack, Image } from '@chakra-ui/react';
+import { Box, Input, SimpleGrid, Text, VStack, Image, Spinner } from '@chakra-ui/react';
 
 const Cities = () => {
   const [cities, setCities] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    setIsLoading(true);
     fetch('https://sheetdb.io/api/v1/atvconiejzkc3')
       .then(response => response.json())
-      .then(data => setCities(data))
-      .catch(error => console.error('Error fetching cities:', error));
+      .then(data => {
+        setCities(data);
+        setIsLoading(false);
+      })
+      .catch(error => {
+        console.error('Error fetching cities:', error);
+        setIsLoading(false);
+      });
   }, []);
 
   const filteredCities = cities.filter(city =>
     city.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  if (isLoading) {
+    return (
+      <Box textAlign="center" mt="20">
+        <Spinner size="xl" />
+      </Box>
+    );
+  }
 
   return (
     <VStack spacing={4} align="stretch">
