@@ -7,6 +7,7 @@ const Cities = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedCity, setSelectedCity] = useState(null);
+  const [editingCity, setEditingCity] = useState(null);
 
   useEffect(() => {
     setIsLoading(true);
@@ -32,6 +33,12 @@ const Cities = () => {
     setSelectedCity(null);
   };
 
+  const saveCityName = () => {
+    const updatedCities = cities.map(c => c.id === editingCity.id ? {...c, name: editingCity.name} : c);
+    setCities(updatedCities);
+    setEditingCity(null);
+  };
+
   const filteredCities = cities.filter(city =>
     city.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -52,9 +59,16 @@ const Cities = () => {
       <SimpleGrid columns={3} spacing={4}>
         {filteredCities.map(city => (
           <Box key={city.id} p={5} shadow="md" borderWidth="1px" onClick={() => openModal(city)} cursor="pointer">
-            <Image src={`https://source.unsplash.com/random/?${city.name}`} alt="City Image" mb={4} width="300px" height="200px" objectFit="cover" />
-            <Text fontSize="xl">{city.name}</Text>
+            {editingCity && editingCity.id === city.id ? (
+              <Input value={editingCity.name} onChange={(e) => setEditingCity({...editingCity, name: e.target.value})} />
+            ) : (
+              <Text fontSize="xl">{city.name}</Text>
+            )}
+            {editingCity && editingCity.id === city.id && (
+              <Button colorScheme="green" size="sm" onClick={saveCityName}>Save</Button>
+            )}
             <Text fontSize="md">Population: {city.population}</Text>
+            <Button colorScheme="blue" size="sm" onClick={() => setEditingCity(city)}>Edit</Button>
           </Box>
         ))}
       </SimpleGrid>
