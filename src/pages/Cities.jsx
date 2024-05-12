@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Input, SimpleGrid, Text, VStack, Image, Spinner } from '@chakra-ui/react';
+import { Box, Input, SimpleGrid, Text, VStack, Image, Spinner, Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, Button } from '@chakra-ui/react';
 
 const Cities = () => {
   const [cities, setCities] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [isLoading, setIsLoading] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedCity, setSelectedCity] = useState(null);
 
   useEffect(() => {
     setIsLoading(true);
@@ -24,6 +26,16 @@ const Cities = () => {
     city.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const openModal = (city) => {
+    setSelectedCity(city);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedCity(null);
+  };
+
   if (isLoading) {
     return (
       <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
@@ -32,21 +44,37 @@ const Cities = () => {
     );
   } else {
     return (
-    <VStack spacing={4} align="stretch">
-      <Input
-        placeholder="Search cities..."
-        onChange={(e) => setSearchTerm(e.target.value)}
-      />
-      <SimpleGrid columns={3} spacing={4}>
-        {filteredCities.map(city => (
-          <Box key={city.id} p={5} shadow="md" borderWidth="1px">
-            <Image src={`https://source.unsplash.com/random/?${city.name}`} alt="City Image" mb={4} width="300px" height="200px" objectFit="cover" />
-            <Text fontSize="xl">{city.name}</Text>
-            <Text fontSize="md">Population: {city.population}</Text>
-          </Box>
-        ))}
-      </SimpleGrid>
-    </VStack>
+      <VStack spacing={4} align="stretch">
+        <Input
+          placeholder="Search cities..."
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+        <SimpleGrid columns={3} spacing={4}>
+          {filteredCities.map(city => (
+            <Box key={city.id} p={5} shadow="md" borderWidth="1px" onClick={() => openModal(city)}>
+              <Image src={`https://source.unsplash.com/random/?${city.name}`} alt="City Image" mb={4} width="300px" height="200px" objectFit="cover" />
+              <Text fontSize="xl">{city.name}</Text>
+              <Text fontSize="md">Population: {city.population}</Text>
+            </Box>
+          ))}
+        </SimpleGrid>
+        <Modal isOpen={isModalOpen} onClose={closeModal}>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>{selectedCity?.name}</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              <Text fontSize="md">Population: {selectedCity?.population}</Text>
+              {/* Add more city details here as needed */}
+            </ModalBody>
+            <ModalFooter>
+              <Button colorScheme="blue" mr={3} onClick={closeModal}>
+                Close
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
+      </VStack>
     );
   }
 };
